@@ -1,0 +1,421 @@
+---
+title: API Reference
+
+language_tabs: # must be one of https://git.io/vQNgJ
+  - javascript--browser: JavaScript (browser)
+  - javascript--node: JavaScript (Node)
+  - swift: Apple (Swift)
+  - android: Android
+  - java: Java
+  - csharp: .NET (C#)
+
+
+toc_footers:
+  - © 2020 <a href='https://www.pushtechnology.com'>Push Technology Limited</a>
+
+includes:
+
+search: false
+---
+
+# Diffusion Quick Start Guide
+
+Diffusion is a real-time API management platform that makes it simple, fast and efficient to move real-time data across the Internet. 
+
+This Quick Start Guide gives you an introduction to Diffusion and how to use it. It covers setting up your first Diffusion instance, and using the core publish and subscribe broadcast mechanism to send and receive data.
+
+To begin using Diffusion, you first need a Diffusion server to develop against. You can either use a Diffusion Cloud service or download the on-premise Diffusion server. 
+
+This guide was last updated for Diffusion <%= config[:version] %>.
+
+# Set up Diffusion 
+
+You can either use:
+
+* [Diffusion Cloud](#set-up-diffusion-cloud) (hosted on Push Technology servers) _or_
+* [Diffusion](#download-and-install-diffusion) (hosted on-premise, or in your private cloud) 
+
+
+## Set up Diffusion Cloud
+
+Sign up for a [free Diffusion Cloud account](https://management.ad.diffusion.cloud/#!/account).
+
+Once you’ve verified your email, you will be able to set up a new Diffusion Cloud service.
+
+Under **Service Region**, select the region nearest to you.
+
+Under **Service Version**, select the newest version available.
+
+When the new service is ready, you’ll be taken to the Diffusion Cloud Account Home. 
+
+<%= image_tag "images/QSG-cloud-dashboard.png" %>
+
+To finish setting up your Diffusion Cloud instance, click the **Manage** button to the right of the service you just created.
+
+> The `admin` details are separate from the account details you use to log in to Diffusion Cloud. They can be used to access the Diffusion service from a remote client, so it’s important to choose a strong password.
+
+You’ll be prompted to specify authentication details for the `admin` security principal. 
+
+Once you’ve set up the `admin` principal details, you’ll see the **Service Dashboard**.
+
+Take note of the hostname that your Diffusion service has been assigned. You can find this in the **Service Details** table in the line beginning **Host**:
+
+> Copy this hostname, as you will need it later to connect to Diffusion and start sending and receiving data.
+
+<%= image_tag "images/qsg-hostname.png" %>
+
+Because you're using Diffusion Cloud, you don't need to download Diffusion. Go to [Get a Client Library](#get-a-client-library) for your language of choice.
+
+## Download and Install Diffusion
+
+XXX content to come XXX
+
+# Get a Client Library
+
+<blockquote class="lang-specific javascript--browser">
+<p>Include the Diffusion JavaScript client in the <code>&lt;head&gt;</code> of your HTML.</p>
+</blockquote>
+```javascript--browser
+<script src="https://download.pushtechnology.com/clients/<%= config[:version] %>/js/diffusion-<%= config[:version] %>.js"></script>
+```
+
+<blockquote class="lang-specific javascript--node">
+<p>Add the <a href="https://www.npmjs.com/package/diffusion">Diffusion NPM module</a> with:</p>
+</blockquote>
+```javascript--node
+const diffusion = require('diffusion');
+```
+
+<blockquote class="lang-specific swift">
+<p>The Diffusion Apple SDK is available for download in two variants.</p>
+
+<p>For iOS applications:
+
+<a href="https://download.pushtechnology.com/clients/<%= config[:version] %>/apple/diffusion-iphoneos-<%= config[:version] %>.zip">diffusion-iphoneos-<%= config[:version] %>.zip</a></p>
+
+<p>For macOS applications:
+
+<a href="https://download.pushtechnology.com/clients/<%= config[:version] %>/apple/diffusion-macosx-<%= config[:version] %>.zip">diffusion-macosx-<%= config[:version] %>.zip</a></p>
+
+<p>We recommend using Xcode 10.2. The lowest supported version is Xcode 9.2.</p>
+
+<p>In your <code>ViewController.swift</code> file, import the client interface.</p>
+
+</blockquote>
+
+```swift
+import Diffusion;
+```
+
+Download and configure the client library of your choice.
+
+# Create a Session
+
+All interactions with Diffusion are done via our client libraries. When you use a client library to connect to Diffusion, this creates a session. A session is able to send and receive data, and acts as the intermediary between Diffusion and your application code.
+
+Let’s create a session, which we will then use to try out various features of Diffusion.
+
+
+```javascript--browser
+
+diffusion.connect({
+    host : "<HOST>",
+    port : <PORT>,
+    principal : admin,
+    credentials : "<PASSWORD>"
+}).then(function(session) {
+    // Use the new session here
+});
+
+```
+
+```javascript--node
+
+diffusion.connect({
+    host : "<HOST>",
+    port : <PORT>,
+    principal : admin,
+    credentials : "<PASSWORD>"
+}).then(function(session) {
+    // Use the new session here
+});
+```
+
+
+
+<blockquote class="lang-specific swift">
+<p>Add a reference to the session in your <code>ViewController</code> class to prevent it from being garbage collected:</p>
+</blockquote>
+
+```swift
+var session:PTDiffusionSession?
+```
+
+<blockquote class="lang-specific swift">
+<p>Connect to Diffusion within the <code>viewDidLoad</code> method:</p>
+</blockquote>
+
+
+```swift
+let url = URL(string: "ws://<HOST>:<PORT>")!
+let credentials = PTDiffusionCredentials(password: "<PASSWORD>")
+let config = PTDiffusionSessionConfiguration(principal: "admin", credentials: credentials)
+
+PTDiffusionSession.open(with: url, configuration: config) { (_session, error) -> Void in
+    self.session = _session
+}
+```
+
+<blockquote class="lang-specific swift">
+<p>Add the following lines to the <code>ViewController</code> class to handle any potential errors:</p>
+</blockquote>
+
+```swift
+let errorHandler: (Error?) -> Void = { error in
+    if (error != nil) {
+        print(error!)
+    }
+}
+```
+
+<aside class="warning">
+You must replace &lt;HOST&gt;, &lt;PORT&gt; and &lt;PASSWORD&gt; in the example code with the values below, depending on whether you are using Cloud or on-premise.
+</aside>
+
+Parameter | Cloud | On-Premise
+--------- | ----- | -----------
+&lt;HOST&gt; | Host name from Service Details | ```localhost```
+&lt;PORT&gt;  | 80 | 8080
+&lt;PASSWORD&gt; | Password you set for ```admin``` | ```password```
+
+
+# Publish Data
+
+## Understanding topics and paths
+
+Publish and subscribe real-time broadcast is one of the key ways of using Diffusion to move data in real-time.
+
+Neither publishers nor subscribers need to know about the existence of each other, which lets you simplify your code to care solely about the data, not who is using it.
+
+To publish data, your client must specify a **topic**.
+
+A topic:
+
+*   contains a specified type of data, for example, JSON
+*   has a unique path
+
+Unlike other messaging products, Diffusion allows you to have millions of unique topics. You can use as many or as few as needed to represent your desired data structure.
+
+Topic paths are structured into hierarchies using the / character, much like URLs. For example, a set of topics used for streaming telemetry data from ships might have paths like:
+
+<code>
+/telemetry/gps/ss-victoria</code>
+
+<code>/telemetry/gps/ss-narwhal</code>
+
+<code>/telemetry/gps/ss-leo
+</code>
+
+This makes it easy to organize related topics, and for subscribers to select data at different levels of granularity. 
+
+For example, a subscriber that needs the GPS data for all the ships can subscribe to all topics matching the path:
+
+<code>
+ /telemetry/gps/
+</code>
+
+
+
+## Create a topic
+
+To begin, we first need to create a JSON topic. Then we’ll start publishing data to it.
+
+
+> Let’s start by creating a JSON topic.
+
+```javascript--node
+session.topics.add('my-topic', diffusion.topics.TopicType.JSON);
+```
+
+```javascript--browser
+session.topics.add('my-topic', diffusion.topics.TopicType.JSON);
+```
+
+<blockquote class="lang-specific swift">
+<p>Add the following code within the callback after establishing the session:</p>
+</blockquote>
+
+```swift
+self.session!.topicControl.add(
+withTopicPath: "my-topic",
+        type: PTDiffusionTopicType.JSON,
+        value: nil,
+        completionHandler: self.errorHandler)
+```
+
+> Now that the topic exists, we can publish data to it.
+
+    
+```javascript--node
+var value = { foo : "bar" }
+var result = session.topicUpdate.set("my-topic", diffusion.datatypes.json(), value);
+```
+
+```javascript--browser
+var value = { foo : "bar" }
+var result = session.topicUpdate.set("my-topic", diffusion.datatypes.json(), value);
+```
+  
+```swift
+var error: NSError? = nil
+let value = PTDiffusionJSON(object: ["foo" : "bar" ], error: &error)
+
+self.session!.topicUpdateControl.updater.update(
+            withTopicPath: "my-topic",
+            value: value,
+            completionHandler: self.errorHandler)
+```
+
+## Monitor topics using the console
+
+XXX content to come XXX
+
+# Subscribe to Data
+
+A session can **subscribe** to data published to topics. Subscription is a way for a session to tell Diffusion which topics it’s interested in. Diffusion will cache your subscriptions, so you can subscribe to topics which don’t yet exist, and retain full subscription state should your session disconnect and reconnect.
+
+You can use security policies to determine which topics a session can subscribe to.
+
+When a session subscribes to an existing topic, Diffusion will send that topic’s current value to the session immediately, and then send any subsequent updates as they arrive. This allows Diffusion to act as a cache, where subscribers are always guaranteed to get the latest value.
+
+
+
+<blockquote class="lang-specific javascript--node">
+  <p>Before we subscribe, we need to first attach a stream to listen for updates.</p>
+</blockquote>
+
+<blockquote class="lang-specific javascript--browser">
+  <p>Before we subscribe, we need to first attach a stream to listen for updates.</p>
+</blockquote>
+
+```javascript--node
+session.addStream('my-topic',
+                  diffusion.datatypes.json()).on('value',
+                  function(topic, specification, newValue, oldValue) {
+  console.log(\`New value for ${path}: ${newValue.get()\`);
+});
+``` 
+
+```javascript--browser
+session.addStream('my-topic',
+                  diffusion.datatypes.json()).on('value',
+                  function(topic, specification, newValue, oldValue) {
+  console.log(\`New value for ${path}: ${newValue.get()\`);
+});
+``` 
+
+<blockquote class="lang-specific javascript--node">
+  <p>Now we can tell Diffusion that we want to receive updates from the topic we created.
+</blockquote>
+
+<blockquote class="lang-specific javascript--browser">
+  <p>Now we can tell Diffusion that we want to receive updates from the topic we created.
+</blockquote>
+
+```javascript--node
+session.select('my-topic');
+```
+
+```javascript--browser
+session.select('my-topic');
+```
+
+<blockquote class="lang-specific swift">
+  <p>To receive data from Diffusion, we use **value streams**. Value streams provide callbacks for topic events, such as subscriptions and received values. Let’s define a class that implements the JSON Value Stream protocol, which we will then use to subscribe to the topic we created.</p>
+</blockquote>
+
+```swift
+class StreamDelegate: NSObject, PTDiffusionJSONValueStreamDelegate {
+        func diffusionStream(
+    _ stream: PTDiffusionStream,
+    didSubscribeToTopicPath topicPath: String,
+    specification: PTDiffusionTopicSpecification) {
+              print("Subscribed to: \(topicPath)")
+        }
+
+        func diffusionStream(
+            _ stream: PTDiffusionValueStream,
+           didUpdateTopicPath topicPath: String,
+           specification: PTDiffusionTopicSpecification,
+           oldJSON: PTDiffusionJSON?,
+           newJSON: PTDiffusionJSON) {
+
+           do {
+              let value:Dictionary<String, Any> = try newJSON.object() as! Dictionary
+              print("\(topicPath): \(value.description)")
+           } catch {
+              print("Unable to read message")
+           }
+    }
+}
+```
+
+<blockquote class="lang-specific swift">
+  <p>Create an instance of this new class and assign it to a property of the <code>ViewController</code>. This avoids the reference being garbage collected after the initial session connection closure has ended.</p>
+</blockquote>
+
+```swift
+let delegate = StreamDelegate()
+```
+
+<blockquote class="lang-specific swift">
+  <p>Now we can use this delegate to register a Value Stream.</p>
+</blockquote>
+
+```swift
+let selector = PTDiffusionTopicSelector(expression: "my-topic")
+let stream = PTDiffusionJSON.valueStream(with: self.delegate)
+
+_session!.topics.add(stream, with: selector)
+```
+
+<blockquote class="lang-specific swift">
+<p>Now we can tell Diffusion that we want to receive updates from the topic we created by subscribing to the topic.</p>
+</blockquote>
+
+```swift
+_session!.topics.subscribe(
+withTopicSelectorExpression: "my-topic",
+completionHandler: self.errorHandler)
+```
+
+<blockquote class="lang-specific swift">
+<p>Note that you can create multiple streams to dispatch updates to different parts of your application.</p>
+</blockquote>
+
+
+
+Now that we’ve created a topic and published some data to it, let’s add a subscription to pull out the value.
+
+# Next Steps
+
+
+<blockquote class="lang-specific javascript--node">
+<p>To learn more about the Diffusion JavaScript SDK, please browse the <a href="https://docs.pushtechnology.com/docs/<%= config[:version] %>/js">API Documentation</a>.</p>
+</blockquote>
+
+<blockquote class="lang-specific javascript--browser">
+<p>To learn more about the Diffusion JavaScript SDK, please browse the <a href="https://docs.pushtechnology.com/docs/<%= config[:version] %>/js">API Documentation</a>.</p>
+</blockquote>
+
+<blockquote class="lang-specific swift">
+<p>To learn more about the Diffusion Apple SDK, please browse the <a href="https://docs.pushtechnology.com/docs/<%= config[:version] %>/apple/">API Documentation</a>.</p>
+</blockquote>
+
+> <p>More advanced code examples are available on our <a href="https://github.com/pushtechnology/diffusion-examples/tree/6.4">GitHub page</a>.</p>
+
+That’s it – we’ve successfully created a Diffusion client that creates a topic, publishes updates, and receives values!
+
+[Diffusion Cloud Manual](https://docs.pushtechnology.com/cloud/<%= config[:version] %>/manual/html/)
+
+[Diffusion On-Premise Manual](https://www.pushtechnology.com/developers/release/<%= config[:version] %>/manual/html/)
