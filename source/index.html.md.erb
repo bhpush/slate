@@ -2,11 +2,10 @@
 title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - javascript--browser: JavaScript (browser)
-  - javascript--node: JavaScript (Node)
+  - javascript: JavaScript
   - swift: Apple (Swift)
-  - android: Android
-  - java: Java
+  - java--android: Android
+  - java--plain: Java
   - csharp: .NET (C#)
 
 
@@ -20,17 +19,17 @@ search: false
 
 # Diffusion Quick Start Guide
 
+<%= image_tag "logo-diffusion.png" %>
+
 Diffusion is a real-time API management platform that makes it simple, fast and efficient to move real-time data across the Internet. 
 
 This Quick Start Guide gives you an introduction to Diffusion and how to use it. It covers setting up your first Diffusion instance, and using the core publish and subscribe broadcast mechanism to send and receive data.
-
-To begin using Diffusion, you first need a Diffusion server to develop against. You can either use a Diffusion Cloud service or download the on-premise Diffusion server. 
 
 This guide was last updated for Diffusion <%= config[:version] %>.
 
 # Set up Diffusion 
 
-You can either use:
+First you need a Diffusion server to develop against. You can either use:
 
 * [Diffusion Cloud](#set-up-diffusion-cloud) (hosted on Push Technology servers) _or_
 * [Diffusion](#download-and-install-diffusion) (hosted on-premise, or in your private cloud) 
@@ -38,51 +37,86 @@ You can either use:
 
 ## Set up Diffusion Cloud
 
-Sign up for a [free Diffusion Cloud account](https://management.ad.diffusion.cloud/#!/account).
+*   Sign up for a [free Diffusion Cloud account](https://management.ad.diffusion.cloud/#!/account).
 
-Once you’ve verified your email, you will be able to set up a new Diffusion Cloud service.
+    Once you’ve verified your email, you will be able to set up a new Diffusion Cloud service.
 
-Under **Service Region**, select the region nearest to you.
+* Under **Service Region**, select the region nearest to you.
 
-Under **Service Version**, select the newest version available.
+* Under **Service Version**, select the newest version available.
 
-When the new service is ready, you’ll be taken to the Diffusion Cloud Account Home. 
+    When the new service is ready, you’ll be taken to the Diffusion Cloud **Account Home**. 
 
-<%= image_tag "images/QSG-cloud-dashboard.png" %>
-
-To finish setting up your Diffusion Cloud instance, click the **Manage** button to the right of the service you just created.
+     <%= image_tag "images/QSG-cloud-dashboard.png" %>
 
 > The `admin` details are separate from the account details you use to log in to Diffusion Cloud. They can be used to access the Diffusion service from a remote client, so it’s important to choose a strong password.
 
-You’ll be prompted to specify authentication details for the `admin` security principal. 
+*   To finish setting up your Diffusion Cloud instance, click the **Manage** button to the right of the service you just created.
 
-Once you’ve set up the `admin` principal details, you’ll see the **Service Dashboard**.
+    You’ll be prompted to specify authentication details for the `admin` security principal.
 
-Take note of the hostname that your Diffusion service has been assigned. You can find this in the **Service Details** table in the line beginning **Host**:
+*   Once you’ve set up the `admin` principal details, you’ll see the **Service Dashboard**.
+
+*   Take note of the hostname that your Diffusion service has been assigned. You can find this in the **Service Details** table in the line beginning **Host**:
 
 > Copy this hostname, as you will need it later to connect to Diffusion and start sending and receiving data.
 
 <%= image_tag "images/qsg-hostname.png" %>
 
-Because you're using Diffusion Cloud, you don't need to download Diffusion. Go to [Get a Client Library](#get-a-client-library) for your language of choice.
+Because you're using Diffusion Cloud, you don't need to download Diffusion. Skip ahead to [Get a Client Library](#get-a-client-library) for your language of choice.
 
-## Download and Install Diffusion
+## Set up Diffusion On-Premise
 
-XXX content to come XXX
+* To start using Diffusion on-premise, download the free trial version from the [latest release page](https://download.pushtechnology.com/releases/latest).
+
+* Make sure you have a compatible version of Java installed: [JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) (1.8.0_131-b11 or higher) or a [Java 11 JDK](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot) (11.0.3 GA or higher, Hotspot JVM).
+    
+* Run the <code>diffusion-installer-<%= config[:version] %>.jar</code> file you just downloaded.
+    
+* You can select which Diffusion components to install. The defaults are fine for this Guide.
+    
+    <%= image_tag "images/select-components.png" %>
+    
+
+    
+> On MacOS or Linux, from the terminal run:
+
+```
+sh bin/diffusion.sh
+```
+
+> On Windows, either from Windows Explorer or the Command Terminal, run:
+
+```
+bin\diffusion.bat
+```
+    
+Once Diffusion is installed, navigate to the directory where you installed it and run the startup script.
+
+You should see Diffusion’s startup logs in the terminal.
+    
+By default, Diffusion’s web console will now be running at <code>localhost:8080</code> with admin credentials set to <code>admin/password</code>.
+    
+
+    
 
 # Get a Client Library
 
-<blockquote class="lang-specific javascript--browser">
+<blockquote class="lang-specific javascript">
 <p>Include the Diffusion JavaScript client in the <code>&lt;head&gt;</code> of your HTML.</p>
 </blockquote>
-```javascript--browser
+
+```javascript
 <script src="https://download.pushtechnology.com/clients/<%= config[:version] %>/js/diffusion-<%= config[:version] %>.js"></script>
 ```
-
-<blockquote class="lang-specific javascript--node">
-<p>Add the <a href="https://www.npmjs.com/package/diffusion">Diffusion NPM module</a> with:</p>
+<blockquote class="lang-specific javascript">
+<p>Or if you wish to use Node.js, install the <a href="https://www.npmjs.com/package/diffusion">latest Diffusion NPM module</a>
+by running:</p>
+<p><code>npm install --save diffusion</code></p>
+<p> then import the library in your code:</p>
 </blockquote>
-```javascript--node
+
+```javascript
 const diffusion = require('diffusion');
 ```
 
@@ -107,30 +141,63 @@ const diffusion = require('diffusion');
 import Diffusion;
 ```
 
+<blockquote class="lang-specific java--android">
+<p>Download the Diffusion Android client: <a href="https://download.pushtechnology.com/clients/<%= config[:version] %>/android/diffusion-android-<%= config[:version] %>.jar">diffusion-android-<%= config[:version] %>.jar</a>.</p>
+
+<p>In Android Studio, create a new project using API Level 19 or later, then copy the <code>diffusion-android-<%= config[:version] %>.jar</code> file to the <code>app/libs</code> directory in your project.</p>
+
+<p>Find the library by expanding the <code>app/libs</code> folder in the left-hand panel (the <strong>Project Tool</strong> Window). If the <code>libs</code> folder is not shown in the left-hand panel, use the pull-down menu at the top of the panel to select the <strong>Project</strong> view.</p>
+
+<p>Right-click on the jar, select <strong>Add as Library...</strong> then accept the default library settings.</p>
+
+<p>Right-click on the <code>libs</code> folder in the <strong>Project Tool Window</strong>, then select <strong>Add as Library</strong>. If the <code>libs</code> folder is not shown in the left-hand panel, use the pull-down menu at the top of the panel to select <strong>Project view</strong>.</p>
+
+<p>Add the following code to the <code>build.gradle</code> file within your project:</p>
+</blockquote>
+
+```java--android
+compileOptions {
+  sourceCompatibility JavaVersion.VERSION_1_8
+  targetCompatibility JavaVersion.VERSION_1_8
+ }
+```
+
+<blockquote class="lang-specific java--plain">
+<p>Download the Diffusion Java client: <a href="https://download.pushtechnology.com/clients/<%= config[:version] %>/java/diffusion-client-<%= config[:version] %>.jar">diffusion-client-<%= config[:version] %>.jar</a></p>
+
+<p>If you are using Maven, first add the Push Technology repo to your <code>pom.xml</code> file:</p>
+</blockquote>
+
+```java--plain
+<repositories>
+  <repository>
+   <id>push-repository</id>
+   <url>https://download.pushtechnology.com/maven/</url>
+  </repository>
+</repositories>
+```
+
+<blockquote class="lang-specific java--plain">
+<p>And then add the Diffusion client to your dependencies.</p>
+</blockquote>
+
+```java--plain
+<dependency>
+  <groupId>com.pushtechnology.diffusion</groupId>
+  <artifactId>diffusion-client</artifactId>
+  <version><%= config[:version] %></version>
+</dependency>
+```
+
 Download and configure the client library of your choice.
 
-# Create a Session
+# Connect to Diffusion
 
-All interactions with Diffusion are done via our client libraries. When you use a client library to connect to Diffusion, this creates a session. A session is able to send and receive data, and acts as the intermediary between Diffusion and your application code.
+All interactions with Diffusion are done via our client libraries. When you use a client library to connect to Diffusion, this creates a **session**. 
 
-Let’s create a session, which we will then use to try out various features of Diffusion.
+A session is able to send and receive data, and acts as the intermediary between Diffusion and your application code.
 
-
-```javascript--browser
-
-diffusion.connect({
-    host : "<HOST>",
-    port : <PORT>,
-    principal : admin,
-    credentials : "<PASSWORD>"
-}).then(function(session) {
-    // Use the new session here
-});
-
-```
-
-```javascript--node
-
+```javascript
 diffusion.connect({
     host : "<HOST>",
     port : <PORT>,
@@ -140,8 +207,6 @@ diffusion.connect({
     // Use the new session here
 });
 ```
-
-
 
 <blockquote class="lang-specific swift">
 <p>Add a reference to the session in your <code>ViewController</code> class to prevent it from being garbage collected:</p>
@@ -178,6 +243,107 @@ let errorHandler: (Error?) -> Void = { error in
 }
 ```
 
+<blockquote class="lang-specific java--android">
+<p>In your project's <code>app/src/main/AndroidManifest.xml</code>, set the <code>INTERNET</code> permission.</p>
+</blockquote>
+
+```java--android
+<uses-permission android:name="android.permission.INTERNET"/>;
+```
+
+<blockquote class="lang-specific java--android">
+<p>Insert the element between the opening <code>&lt;manifest&gt;</code> tag and the opening <code>&lt;application&gt;</code> tag. This permission is required to use the Diffusion API.</p>
+<p>In the <code>MainActivity.java</code> file in your project, create a <code>SessionHandler</code> inner class. This is required to prevent Diffusion running in the main thread and potentially affecting your app's performance.</p>
+</blockquote>
+
+```java--android
+private class SessionHandler implements SessionFactory.OpenCallback {
+        private Session session = null;
+
+        @Override
+        public void onOpened(Session session) {
+            this.session = session;
+        }
+
+        @Override
+        public void onError(ErrorReason errorReason) {
+            
+        }
+
+        public void close() {
+            if ( session != null ) {
+              session.close();
+            }
+        }
+    }
+```
+
+<blockquote class="lang-specific java--android">
+<p>Either use Android Studio to resolve the imports, or paste the following into the import section of the file:</p>
+</blockquote>
+
+```java--android
+import com.pushtechnology.diffusion.client.callbacks.ErrorReason;
+import com.pushtechnology.diffusion.client.session.Session;
+import com.pushtechnology.diffusion.client.session.SessionFactory;
+```
+
+<blockquote class="lang-specific java--android">
+<p>In your <code>MainActivity</code> class, add the following private field.</p>
+</blockquote>
+
+```java--android
+private SessionHandler sessionHandler = null;
+```
+
+<blockquote class="lang-specific java--android">
+<p>Then add the following lines to the <code>onCreate</code> method.</p>
+</blockquote>
+
+```java--android
+if (sessionHandler == null) {
+    sessionHandler = new SessionHandler();
+              
+    Diffusion.sessions()
+              .principal("admin")
+              .password("<PASSWORD>")
+              .open("ws://<HOST>:<PORT>", sessionHandler);
+}
+```
+
+<blockquote class="lang-specific java--android">
+<p>Again, use Android Studio to resolve the imports, or paste the following into the import section:</p>
+</blockquote>
+
+```java--android
+import com.pushtechnology.diffusion.client.Diffusion;
+```
+
+<blockquote class="lang-specific java--android">
+<p>To properly free resources when your app is closed, override the onDestroy method of your MainActivity class.</p>
+</blockquote>
+
+```java--android
+if ( sessionHandler != null ) {
+    sessionHandler.close();
+    sessionHandler = null;
+}
+super.onDestroy();
+```
+
+<blockquote class="lang-specific java--plain">
+<p>In the main method of your Java project, add the following lines to connect to Diffusion:</p>
+</blockquote>
+
+```java--plain
+final Session session = Diffusion.sessions()
+  .principal("admin")
+  .password("<PASSWORD>")
+  .open("ws://<HOST>:<PORT>");
+```
+
+Let’s create a session, which we will then use to try out various features of Diffusion.
+
 <aside class="warning">
 You must replace &lt;HOST&gt;, &lt;PORT&gt; and &lt;PASSWORD&gt; in the example code with the values below, depending on whether you are using Cloud or on-premise.
 </aside>
@@ -208,41 +374,31 @@ Unlike other messaging products, Diffusion allows you to have millions of unique
 
 Topic paths are structured into hierarchies using the / character, much like URLs. For example, a set of topics used for streaming telemetry data from ships might have paths like:
 
-<code>
-/telemetry/gps/ss-victoria</code>
+<code>/telemetry/gps/ss-victoria</code>
 
 <code>/telemetry/gps/ss-narwhal</code>
 
-<code>/telemetry/gps/ss-leo
-</code>
+<code>/telemetry/gps/ss-leo</code>
 
 This makes it easy to organize related topics, and for subscribers to select data at different levels of granularity. 
 
 For example, a subscriber that needs the GPS data for all the ships can subscribe to all topics matching the path:
 
-<code>
- /telemetry/gps/
-</code>
+<code>/telemetry/gps/</code>
 
 
 
-## Create a topic
-
-To begin, we first need to create a JSON topic. Then we’ll start publishing data to it.
+## Create and update a topic
 
 
-> Let’s start by creating a JSON topic.
-
-```javascript--node
+```javascript
 session.topics.add('my-topic', diffusion.topics.TopicType.JSON);
-```
-
-```javascript--browser
-session.topics.add('my-topic', diffusion.topics.TopicType.JSON);
+var value = { foo : "bar" };
+var result = session.topicUpdate.set("my-topic", diffusion.datatypes.json(), value);
 ```
 
 <blockquote class="lang-specific swift">
-<p>Add the following code within the callback after establishing the session:</p>
+<p>First, create a JSON topic. Add the following code within the callback after establishing the session:</p>
 </blockquote>
 
 ```swift
@@ -252,20 +408,10 @@ withTopicPath: "my-topic",
         value: nil,
         completionHandler: self.errorHandler)
 ```
+<blockquote class="lang-specific swift">
+<p>Now that the topic exists, you can publish data to it. Add the following lines:</p>
+</blockquote>
 
-> Now that the topic exists, we can publish data to it.
-
-    
-```javascript--node
-var value = { foo : "bar" }
-var result = session.topicUpdate.set("my-topic", diffusion.datatypes.json(), value);
-```
-
-```javascript--browser
-var value = { foo : "bar" }
-var result = session.topicUpdate.set("my-topic", diffusion.datatypes.json(), value);
-```
-  
 ```swift
 var error: NSError? = nil
 let value = PTDiffusionJSON(object: ["foo" : "bar" ], error: &error)
@@ -276,29 +422,74 @@ self.session!.topicUpdateControl.updater.update(
             completionHandler: self.errorHandler)
 ```
 
-## Monitor topics using the console
+<blockquote class="lang-specific java--android">
+<p>First, create a JSON topic. Add the following lines within the <code>onOpened</code> method of the <code>SessionHandler</code> class:</p>
+</blockquote>
+
+```java--android
+ session.feature(TopicControl.class).addTopic(
+                "my-topic",
+                TopicType.JSON,
+                new TopicControl.AddCallback.Default());
+```
+
+<blockquote class="lang-specific java--android">
+<p>Now you need to publish the data. Since the topic holds JSON, you need to construct values of the appropriate type before updating. To do this, use the DataType library provided by Diffusion.</p>
+</blockquote>
+
+```java--android
+final JSONDataType jsonDataType = Diffusion.dataTypes().json();
+final JSON value = jsonDataType.fromJsonString("{\"foo\" : \"bar\" }");
+final CompletableFuture result = session.feature(TopicUpdate.class).set("my-topic", JSON.class, value);
+```
+
+<blockquote class="lang-specific java--plain">
+<p>First, create a JSON topic. Add the following after the line that establishes the session:</p>
+</blockquote>
+
+```java--plain
+session.feature(TopicControl.class).addTopic("my-topic", TopicType.JSON);
+```
+
+<blockquote class="lang-specific java--plain">
+<p>Now you need to publish the data.  Since the topic holds JSON, you need to construct values of the appropriate type before updating. To do this, use the DataType library provided by Diffusion.</p>
+</blockquote>
+
+```java--plain
+final JSONDataType jsonDataType = Diffusion.dataTypes().json();
+final JSON value = jsonDataType.fromJsonString("{\"foo\" : \"bar\" }");
+final CompletableFuture result = session.feature(TopicUpdate.class).set("my-topic", JSON.class, value);
+```
+
+First, you will create a topic using the JSON topic type.
+
+The path of the topic will be:
+
+<code>/my-topic</code>
+
+Then, you will publish this JSON data to the topic:
+
+<code>{"foo":"bar"}</code>
+
+## Monitor topics with the console
 
 XXX content to come XXX
 
 # Subscribe to Data
 
-A session can **subscribe** to data published to topics. Subscription is a way for a session to tell Diffusion which topics it’s interested in. Diffusion will cache your subscriptions, so you can subscribe to topics which don’t yet exist, and retain full subscription state should your session disconnect and reconnect.
+> You can use security policies to determine which topics a session can subscribe to.
 
-You can use security policies to determine which topics a session can subscribe to.
+A session can **subscribe** to data published to topics. Subscription is a way for a session to tell Diffusion which topics it’s interested in. Diffusion will cache your subscriptions, so you can subscribe to topics which don’t yet exist, and retain full subscription state should your session disconnect and reconnect.
 
 When a session subscribes to an existing topic, Diffusion will send that topic’s current value to the session immediately, and then send any subsequent updates as they arrive. This allows Diffusion to act as a cache, where subscribers are always guaranteed to get the latest value.
 
 
-
-<blockquote class="lang-specific javascript--node">
+<blockquote class="lang-specific javascript">
   <p>Before we subscribe, we need to first attach a stream to listen for updates.</p>
 </blockquote>
 
-<blockquote class="lang-specific javascript--browser">
-  <p>Before we subscribe, we need to first attach a stream to listen for updates.</p>
-</blockquote>
 
-```javascript--node
+```javascript
 session.addStream('my-topic',
                   diffusion.datatypes.json()).on('value',
                   function(topic, specification, newValue, oldValue) {
@@ -306,32 +497,17 @@ session.addStream('my-topic',
 });
 ``` 
 
-```javascript--browser
-session.addStream('my-topic',
-                  diffusion.datatypes.json()).on('value',
-                  function(topic, specification, newValue, oldValue) {
-  console.log(\`New value for ${path}: ${newValue.get()\`);
-});
-``` 
-
-<blockquote class="lang-specific javascript--node">
-  <p>Now we can tell Diffusion that we want to receive updates from the topic we created.
+<blockquote class="lang-specific javascript">
+  <p>Now we can tell Diffusion that we want to receive updates from the topic we created.</p>
 </blockquote>
 
-<blockquote class="lang-specific javascript--browser">
-  <p>Now we can tell Diffusion that we want to receive updates from the topic we created.
-</blockquote>
-
-```javascript--node
-session.select('my-topic');
-```
-
-```javascript--browser
+```javascript
 session.select('my-topic');
 ```
 
 <blockquote class="lang-specific swift">
-  <p>To receive data from Diffusion, we use **value streams**. Value streams provide callbacks for topic events, such as subscriptions and received values. Let’s define a class that implements the JSON Value Stream protocol, which we will then use to subscribe to the topic we created.</p>
+  <p>To receive data from Diffusion, we use <strong>value streams</strong>. Value streams provide callbacks for topic events, such as subscriptions and received values.</p>
+  <p> Let’s define a class that implements the JSON Value Stream protocol, which we will then use to subscribe to the topic we created.</p>
 </blockquote>
 
 ```swift
@@ -380,7 +556,7 @@ _session!.topics.add(stream, with: selector)
 ```
 
 <blockquote class="lang-specific swift">
-<p>Now we can tell Diffusion that we want to receive updates from the topic we created by subscribing to the topic.</p>
+  <p>Now we can tell Diffusion that we want to receive updates from the topic we created by subscribing to the topic.</p>
 </blockquote>
 
 ```swift
@@ -393,18 +569,61 @@ completionHandler: self.errorHandler)
 <p>Note that you can create multiple streams to dispatch updates to different parts of your application.</p>
 </blockquote>
 
+<blockquote class="lang-specific java--android">
+<p>Before we subscribe, we need to first attach a stream to listen for updates.</p>
+</blockquote>
+
+```java--android
+session.feature(Topics.class).addStream("my-counter", JSON.class, new Topics.ValueStream.Default() {
+  @Override
+  public void onValue(String topicPath, TopicSpecification topicSpec, JSON oldValue, JSON newValue) {
+    System.out.println("New value for" + topicPath + ": " + newValue.toJsonString());
+  }
+});
+```
+<blockquote class="lang-specific java--android">
+<p>Now we can tell Diffusion that we want to receive updates from the topic we created.</p>
+</blockquote>
+
+```java--android
+session.feature(Topics.class).subscribe("my-counter");
+```
+
+<blockquote class="lang-specific java--android">
+<p>Note that you can create multiple streams to dispatch updates to different parts of your application.</p>
+</blockquote>
+
+<blockquote class="lang-specific java--plain">
+<p>Before we subscribe, we need to first attach a stream to listen for updates.</p>
+</blockquote>
+
+```java--plain
+session.feature(Topics.class).addStream("my-counter", JSON.class, new Topics.ValueStream.Default() {
+  @Override
+  public void onValue(String topicPath, TopicSpecification topicSpec, JSON oldValue, JSON newValue) {
+    System.out.println("New value for" + topicPath + ": " + newValue.toJsonString());
+  }
+});
+```
+<blockquote class="lang-specific java--plain">
+<p>Now we can tell Diffusion that we want to receive updates from the topic we created.</p>
+</blockquote>
+
+```java--plain
+session.feature(Topics.class).subscribe("my-counter");
+```
+
+<blockquote class="lang-specific java--plain">
+<p>Note that you can create multiple streams to dispatch updates to different parts of your application.</p>
+</blockquote>
 
 
-Now that we’ve created a topic and published some data to it, let’s add a subscription to pull out the value.
+
+Now that we’ve created a topic and published some data to it, let’s add a subscription to retrieve the JSON value.
 
 # Next Steps
 
-
-<blockquote class="lang-specific javascript--node">
-<p>To learn more about the Diffusion JavaScript SDK, please browse the <a href="https://docs.pushtechnology.com/docs/<%= config[:version] %>/js">API Documentation</a>.</p>
-</blockquote>
-
-<blockquote class="lang-specific javascript--browser">
+<blockquote class="lang-specific javascript">
 <p>To learn more about the Diffusion JavaScript SDK, please browse the <a href="https://docs.pushtechnology.com/docs/<%= config[:version] %>/js">API Documentation</a>.</p>
 </blockquote>
 
@@ -415,6 +634,8 @@ Now that we’ve created a topic and published some data to it, let’s add a su
 > <p>More advanced code examples are available on our <a href="https://github.com/pushtechnology/diffusion-examples/tree/6.4">GitHub page</a>.</p>
 
 That’s it – we’ve successfully created a Diffusion client that creates a topic, publishes updates, and receives values!
+
+If you want to learn more about the Diffusion web console, watch [our introductory video guide on YouTube](https://www.youtube.com/watch?v=5oNbgK1SNj8&list=PLYzjzg_h2TcxUeQPrg0JFqfx4eKdt77f2).
 
 [Diffusion Cloud Manual](https://docs.pushtechnology.com/cloud/<%= config[:version] %>/manual/html/)
 
