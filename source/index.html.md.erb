@@ -25,6 +25,9 @@ Diffusion is a real-time API management platform that makes it simple, fast and 
 
 This Quick Start Guide gives you an introduction to Diffusion and how to use it. It covers setting up your first Diffusion instance, and using the core publish and subscribe broadcast mechanism to send and receive data.
 
+> Select the client language you wish to use from the options above.
+
+
 This guide was last updated for Diffusion <%= config[:version] %>.
 
 # Set up Diffusion 
@@ -342,7 +345,7 @@ final Session session = Diffusion.sessions()
   .open("ws://<HOST>:<PORT>");
 ```
 
-Let’s create a session, which we will then use to try out various features of Diffusion.
+Let’s create a session:
 
 <aside class="warning">
 You must replace &lt;HOST&gt;, &lt;PORT&gt; and &lt;PASSWORD&gt; in the example code with the values below, depending on whether you are using Cloud or on-premise.
@@ -473,7 +476,17 @@ Then, you will publish this JSON data to the topic:
 
 ## Monitor topics with the console
 
-XXX content to come XXX
+You can use the web-based Diffusion monitoring console to see your new topic.
+
+* If you're using Diffusion Cloud, go to the **Service Dashboard** and then click on **Console** at left.
+* If you installed Diffusion locally, go to <code>localhost:8080</code> and log in with <code>admin</code> / <code>password</code>.
+
+Click the **Topics** tab at left.
+
+<%= image_tag "images/qsg-console.png" %>
+
+In the **Focus** field at top, enter <code>my-topic</code> to display the topic value.
+
 
 # Subscribe to Data
 
@@ -485,7 +498,7 @@ When a session subscribes to an existing topic, Diffusion will send that topic�
 
 
 <blockquote class="lang-specific javascript">
-  <p>Before we subscribe, we need to first attach a stream to listen for updates.</p>
+  <p>Before you subscribe, you need to first attach a stream to listen for updates.</p>
 </blockquote>
 
 
@@ -498,7 +511,7 @@ session.addStream('my-topic',
 ``` 
 
 <blockquote class="lang-specific javascript">
-  <p>Now we can tell Diffusion that we want to receive updates from the topic we created.</p>
+  <p>Now you can tell Diffusion that you want to receive updates from the topic you created.</p>
 </blockquote>
 
 ```javascript
@@ -506,8 +519,8 @@ session.select('my-topic');
 ```
 
 <blockquote class="lang-specific swift">
-  <p>To receive data from Diffusion, we use <strong>value streams</strong>. Value streams provide callbacks for topic events, such as subscriptions and received values.</p>
-  <p> Let’s define a class that implements the JSON Value Stream protocol, which we will then use to subscribe to the topic we created.</p>
+  <p>To receive data from Diffusion, you use <strong>value streams</strong>. Value streams provide callbacks for topic events, such as subscriptions and received values.</p>
+  <p> Let’s define a class that implements the JSON Value Stream protocol, which you will then use to subscribe to the topic you created.</p>
 </blockquote>
 
 ```swift
@@ -545,7 +558,7 @@ let delegate = StreamDelegate()
 ```
 
 <blockquote class="lang-specific swift">
-  <p>Now we can use this delegate to register a Value Stream.</p>
+  <p>Now you can use this delegate to register a Value Stream.</p>
 </blockquote>
 
 ```swift
@@ -556,7 +569,7 @@ _session!.topics.add(stream, with: selector)
 ```
 
 <blockquote class="lang-specific swift">
-  <p>Now we can tell Diffusion that we want to receive updates from the topic we created by subscribing to the topic.</p>
+  <p>Now you can tell Diffusion that youwant to receive updates from the topic you created by subscribing to the topic.</p>
 </blockquote>
 
 ```swift
@@ -570,7 +583,7 @@ completionHandler: self.errorHandler)
 </blockquote>
 
 <blockquote class="lang-specific java--android">
-<p>Before we subscribe, we need to first attach a stream to listen for updates.</p>
+<p>Before you subscribe, you need to first attach a stream to listen for updates.</p>
 </blockquote>
 
 ```java--android
@@ -582,7 +595,7 @@ session.feature(Topics.class).addStream("my-counter", JSON.class, new Topics.Val
 });
 ```
 <blockquote class="lang-specific java--android">
-<p>Now we can tell Diffusion that we want to receive updates from the topic we created.</p>
+<p>Now you can tell Diffusion that you want to receive updates from the topic you created.</p>
 </blockquote>
 
 ```java--android
@@ -594,7 +607,7 @@ session.feature(Topics.class).subscribe("my-counter");
 </blockquote>
 
 <blockquote class="lang-specific java--plain">
-<p>Before we subscribe, we need to first attach a stream to listen for updates.</p>
+<p>Before you subscribe, you need to first attach a stream to listen for updates.</p>
 </blockquote>
 
 ```java--plain
@@ -606,7 +619,7 @@ session.feature(Topics.class).addStream("my-counter", JSON.class, new Topics.Val
 });
 ```
 <blockquote class="lang-specific java--plain">
-<p>Now we can tell Diffusion that we want to receive updates from the topic we created.</p>
+<p>Now you can tell Diffusion that you want to receive updates from the topic you created.</p>
 </blockquote>
 
 ```java--plain
@@ -623,20 +636,44 @@ Now that we’ve created a topic and published some data to it, let’s add a su
 
 # Next Steps
 
+
+That’s it – you’ve successfully created a Diffusion client that creates a topic, publishes updates, and receives values!
+
+## Further exercises
+
+Now you could try:
+
+* modifying the example code to change the topic value regularly, and see how Diffusion provides real-time data delivery
+* create multiple topics organised into a topic tree
+* publish and subscribe using clients in different languages, to get a feel for how Diffusion can simplify communications between different platforms
+
+## Documentation
+
 <blockquote class="lang-specific javascript">
-<p>To learn more about the Diffusion JavaScript SDK, please browse the <a href="https://docs.pushtechnology.com/docs/<%= config[:version] %>/js">API Documentation</a>.</p>
+<p>To learn more about the Diffusion JavaScript SDK, please browse the <a href="https://docs.pushtechnology.com/docs/<%= config[:version] %>/js">JavaScript API Documentation</a>.</p>
 </blockquote>
 
 <blockquote class="lang-specific swift">
-<p>To learn more about the Diffusion Apple SDK, please browse the <a href="https://docs.pushtechnology.com/docs/<%= config[:version] %>/apple/">API Documentation</a>.</p>
+<p>To learn more about the Diffusion Apple SDK, please browse the <a href="https://docs.pushtechnology.com/docs/<%= config[:version] %>/apple/">Apple API Documentation</a>.</p>
 </blockquote>
 
-> <p>More advanced code examples are available on our <a href="https://github.com/pushtechnology/diffusion-examples/tree/6.4">GitHub page</a>.</p>
+<blockquote class="lang-specific java--android">
+<p>To learn more about the Diffusion Android SDK, please browse the <a href="https://docs.pushtechnology.com/docs/<%= config[:version] %>/android/">Android API Documentation</a>.</p>
+</blockquote>
 
-That’s it – we’ve successfully created a Diffusion client that creates a topic, publishes updates, and receives values!
+<blockquote class="lang-specific java--plain">
+<p>To learn more about the Diffusion Java SDK, please browse the <a href="https://docs.pushtechnology.com/docs/<%= config[:version] %>/java">Java API Documentation</a>.</p>
+</blockquote>
 
-If you want to learn more about the Diffusion web console, watch [our introductory video guide on YouTube](https://www.youtube.com/watch?v=5oNbgK1SNj8&list=PLYzjzg_h2TcxUeQPrg0JFqfx4eKdt77f2).
+<blockquote class="lang-specific csharp">
+<p>To learn more about the Diffusion .NET SDK, please browse the <a href="https://docs.pushtechnology.com/docs/<%= config[:version] %>/dotnet/api/index.html">.NET API Documentation</a>.</p>
+</blockquote>
 
-[Diffusion Cloud Manual](https://docs.pushtechnology.com/cloud/<%= config[:version] %>/manual/html/)
+> More advanced code examples are available on our [GitHub page](https://github.com/pushtechnology/diffusion-examples/).
 
-[Diffusion On-Premise Manual](https://www.pushtechnology.com/developers/release/<%= config[:version] %>/manual/html/)
+
+[Diffusion Cloud manual](https://docs.pushtechnology.com/cloud/<%= config[:version] %>/manual/html/) and [Diffusion On-Premise manual](https://www.pushtechnology.com/developers/release/<%= config[:version] %>/manual/html/)
+
+[Diffusion Console video tour](https://www.youtube.com/watch?v=5oNbgK1SNj8&list=PLYzjzg_h2TcxUeQPrg0JFqfx4eKdt77f2)
+
+Go to the [Diffusion Developer Hub](https://developers.pushtechnology.com/hc/) for more support and information.
